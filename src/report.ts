@@ -1,4 +1,5 @@
 import type { ChaosEvent } from './types';
+import { readSetting } from './settings';
 
 /**
  * Chaos reporting has two paths:
@@ -16,16 +17,13 @@ import type { ChaosEvent } from './types';
 const queue: ChaosEvent[] = [];
 
 /**
- * The Node plugin sets `__chaosPlugin` in config.env. We only forward events
+ * The Node plugin sets `__chaosPlugin` in config.expose (or config.env on
+ * Cypress < 15.10). We only forward events
  * when it's present, so without the plugin there is no `chaos:record` task to
  * fail on — reporting is simply a no-op and commands still work.
  */
 function pluginPresent(): boolean {
-  try {
-    return Boolean(Cypress.env('__chaosPlugin'));
-  } catch {
-    return false;
-  }
+  return Boolean(readSetting('__chaosPlugin'));
 }
 
 function sendToNode(event: ChaosEvent): void {

@@ -202,7 +202,9 @@ CHAOS=flaky npx cypress run
 | `unreliable` | slow-3G + 50% random drops |
 | `offline` | start the whole suite offline |
 
-> Requires the [config step](#install) so the raw `CHAOS` env reaches the browser. (Alternatively, `--env CHAOS=flaky` works without it.)
+> Requires the [config step](#install) so the raw `CHAOS` env reaches the browser. (Alternatively, without the config step: `--expose CHAOS=flaky` on Cypress 15.10+ and 16, or `--env CHAOS=flaky` on older versions.)
+>
+> Works with Cypress 12 through 16. On Cypress 15.10+ settings are read with `Cypress.expose()`; older versions use `Cypress.env()`.
 
 ---
 

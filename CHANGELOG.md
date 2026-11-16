@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] — 2026-11-16
+
+### Fixed
+- Cypress 16 support. Cypress 16 removed `Cypress.env()`, which broke seeded
+  drops (`CHAOS_SEED`), global chaos mode (`CHAOS`) and the per-spec report.
+  Settings are now read with `Cypress.expose()` on Cypress 15.10+ and 16, with
+  `Cypress.env()` kept only for older versions. This also removes the
+  `Cypress.env()` deprecation warning on Cypress 15.10+.
+- `setupNetworkChaos` now writes its settings to `config.expose` when available,
+  and also forwards `CYPRESS_CHAOS` / `CYPRESS_CHAOS_SEED`.
+
+### Changed
+- Without the config step, global mode on Cypress 15.10+ and 16 is enabled
+  with `--expose CHAOS=<scenario>` instead of `--env`.
+
 ## [1.0.0] — 2026-11-13
 
 Initial release.

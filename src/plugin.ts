@@ -29,15 +29,27 @@ export function setupNetworkChaos(
 ): PluginConfig {
   const logSummary = options.logSummary !== false;
 
-  // Let a raw `CHAOS=flaky npx cypress run` reach the browser via config.env.
-  if (!config.env) config.env = {};
+  // Pass our public settings to the browser. Cypress >= 15.10 has a
+  // `config.expose` object (read in the browser with `Cypress.expose()`;
+  // Cypress 16 removed `Cypress.env()`). Older versions only have `config.env`.
+  const cfg = config as unknown as {
+    env?: Record<string, unknown>;
+    expose?: Record<string, unknown>;
+  };
+  const env: Record<string, unknown> = cfg.env ?? {};
+  cfg.env = env;
+  const hasExpose = cfg.expose !== undefined && cfg.expose !== null;
+  const target = hasExpose ? (cfg.expose as Record<string, unknown>) : env;
+
   // Signal to the browser side that the reporting task is registered.
-  config.env.__chaosPlugin = true;
-  if (process.env.CHAOS && !config.env.CHAOS) {
-    config.env.CHAOS = process.env.CHAOS;
-  }
-  if (process.env.CHAOS_SEED && !config.env.CHAOS_SEED) {
-    config.env.CHAOS_SEED = process.env.CHAOS_SEED;
+  target.__chaosPlugin = true;
+
+  // Let a raw `CHAOS=flaky npx cypress run` (or `CYPRESS_CHAOS=flaky`, which
+  // Cypress puts in config.env only) reach the browser.
+  for (const key of ['CHAOS', 'CHAOS_SEED']) {
+    if (target[key] !== undefined) continue;
+    const value = process.env[key] ?? env[key];
+    if (value !== undefined) target[key] = value;
   }
 
   let events: ChaosEvent[] = [];
