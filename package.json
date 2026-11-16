@@ -1,6 +1,6 @@
 {
   "name": "cypress-network-chaos",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Inject slow networks, failures, dropped requests, timeouts and offline conditions into Cypress tests with one intent-level line. Presets, seeded determinism, a global chaos mode and per-spec reporting.",
   "keywords": [
     "cypress",
