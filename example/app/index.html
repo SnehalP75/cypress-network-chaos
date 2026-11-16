@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>network-chaos example</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/dashboard" data-cy="nav-dashboard">Dashboard</a>
+        <a href="/products" data-cy="nav-products">Products</a>
+        <a href="/checkout" data-cy="nav-checkout">Checkout</a>
+      </nav>
+      <div id="offline-banner" data-cy="offline-banner" hidden>You are offline</div>
+    </header>
+
+    <main id="view"><!-- rendered by app.js --></main>
+
+    <div id="toast" data-cy="toast" hidden></div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
