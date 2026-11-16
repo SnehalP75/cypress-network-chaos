@@ -1,6 +1,7 @@
 import { SCENARIOS, isScenario } from './presets';
 import { clearQueue, flush } from './report';
 import { cleanupOffline } from './offline';
+import { readSetting } from './settings';
 import {
   resetCdpWarning,
   cdpReset,
@@ -36,12 +37,7 @@ export function installNetworkChaos(): void {
 }
 
 function readChaosEnv(): string | undefined {
-  let name: unknown;
-  try {
-    name = Cypress.env('CHAOS');
-  } catch {
-    name = undefined;
-  }
+  const name = readSetting('CHAOS');
   if (!name || typeof name !== 'string') return undefined;
   if (!isScenario(name)) {
     // eslint-disable-next-line no-console

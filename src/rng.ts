@@ -1,3 +1,5 @@
+import { readSetting } from './settings';
+
 /**
  * Deterministic pseudo-random generator so "random" chaos is reproducible.
  *
@@ -28,13 +30,13 @@ export function hashString(str: string): number {
 }
 
 /**
- * Resolve the effective seed: explicit option wins, else `CHAOS_SEED` env,
+ * Resolve the effective seed: explicit option wins, else the `CHAOS_SEED`
+ * setting (exposed / env),
  * else a fixed default (so the default run is still reproducible).
  */
 export function resolveSeed(explicit?: number): number {
   if (typeof explicit === 'number') return explicit >>> 0;
-  const env =
-    typeof Cypress !== 'undefined' ? Cypress.env('CHAOS_SEED') : undefined;
+  const env = readSetting('CHAOS_SEED');
   if (env !== undefined && env !== null && !Number.isNaN(Number(env))) {
     return Number(env) >>> 0;
   }

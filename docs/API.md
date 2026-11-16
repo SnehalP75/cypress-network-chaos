@@ -207,8 +207,8 @@ export default defineConfig({
 What it does:
 - registers the `chaos:record` and `chaos:reset` tasks that collect injected-fault events,
 - prints a one-line summary in an `after:spec` hook,
-- forwards a raw `CHAOS` / `CHAOS_SEED` process env into `config.env` so [global mode](../README.md#global-chaos-mode) works without `--env`,
-- sets `config.env.__chaosPlugin = true` so the browser side knows the reporting task exists.
+- forwards a raw `CHAOS` / `CHAOS_SEED` process env (or `CYPRESS_CHAOS` / `CYPRESS_CHAOS_SEED`) into `config.expose` on Cypress 15.10+ and 16, or `config.env` on older versions, so [global mode](../README.md#global-chaos-mode) works without `--expose` / `--env`,
+- sets `__chaosPlugin = true` in that same object so the browser side knows the reporting task exists.
 
 Returns the (mutated) `config`, so `return setupNetworkChaos(on, config)` is all you need.
 
