@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Cypress ${{ matrix.cypress }} / ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cypress: ['13', '16']
+        browser: [electron, chrome]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Use Cypress ${{ matrix.cypress }}
+        run: |
+          npm install --no-save cypress@${{ matrix.cypress }}
+          npx cypress install
+          npx cypress verify
+
+      - name: Build
+        run: npm run build
+
+      - name: Link example project to the package
+        run: mkdir -p example/node_modules && ln -s ../.. example/node_modules/cypress-network-chaos
+
+      - name: Run example tests
+        run: npx cypress run --project example --browser ${{ matrix.browser }}
+
+      - name: Run example tests in global chaos mode
+        run: npx cypress run --project example --browser ${{ matrix.browser }}
+        env:
+          CHAOS: flaky
